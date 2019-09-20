@@ -3,7 +3,7 @@
 #### Download dependencies
 > npm i
 
-#### Run server
+#### Run server with nodemon
 
-> node server
+> npm start
 
