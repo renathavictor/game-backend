@@ -3,6 +3,14 @@
 #### Download dependencies
 > npm i
 
+#### Switch to develop branch
+
+> git checkout develop
+
+#### Create a new branch
+
+> git checkout -b name-feature
+
 #### Run server with nodemon
 
 > npm start
