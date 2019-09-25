@@ -7,3 +7,11 @@
 
 > npm start
 
+
+### API
+
+> http://localhost:5000/api
+
+##### Classes
+
+> http://localhost:5000/api/classes
