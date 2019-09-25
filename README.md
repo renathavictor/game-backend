@@ -14,4 +14,4 @@
 
 ##### Classes
 
-> http://localhost:5000/api/classes
+> https://dungeon-seeker.firebaseio.com/classes.json
