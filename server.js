@@ -2,18 +2,33 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import { firebaseDB, firebaseClass, firebaseSeeker } from './firebase';
+import { firebaseLooper } from './misc';
 
 
 const app = express();
 app.use(bodyParser.json());
 
+const cors = require('cors')({origin: true})
 
 // fetch classes
 
 app.get('/api/classes', (req, res) => {
-  const classReference = firebaseClass;
+  cors(req, res, () => {
+    const classReference = firebaseClass;
+  
+    classReference.on("value",
+      snapshot => {
+        const classes = firebaseLooper(snapshot)
+        res.json(classes);
+        classReference.off("value");
+      },
+      errorObject => {
+        console.log("The read failed: " + errorObject.code);
+        res.send("The read failed: " + errorObject.code);
+      });
+  })
 
-  classReference.on("value",
+  /* classReference.on("value",
     snapshot => {
       console.log(snapshot.val());
       res.json(snapshot.val());
@@ -22,9 +37,20 @@ app.get('/api/classes', (req, res) => {
     errorObject => {
       console.log("The read failed: " + errorObject.code);
       res.send("The read failed: " + errorObject.code);
-    });
-  //res.send('API is working')
+    }); */
+  // res.send('API is working')
 });
+
+app.get('/api/classes/:id', (req, res) => {
+  cors(req, res, () => {
+    const classReference = firebaseDB
+  
+    classReference.ref(`classes/${req.params.id}`).once('value')
+      .then(snapshot => {
+        res.json(snapshot)
+      })
+  })
+})
 
 app.post('/api/classes', (req, res) => {
   console.log("HTTP POST Request");

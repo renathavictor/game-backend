@@ -19,7 +19,7 @@ const config = {
 firebase.initializeApp(config);
 
 const firebaseDB = firebase.database();
-const firebaseClass = firebaseDB.ref('class'); // fazer um para cada tipo
+const firebaseClass = firebaseDB.ref('classes'); // fazer um para cada tipo
 const firebaseSeeker = firebaseDB.ref('seeker');
 
 export {
