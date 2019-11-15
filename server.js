@@ -2,18 +2,33 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import { firebaseDB, firebaseClass, firebaseSeeker } from './firebase';
+import { firebaseLooper } from './misc';
 
 
 const app = express();
 app.use(bodyParser.json());
 
+const cors = require('cors')({origin: true})
 
 // fetch classes
 
 app.get('/api/classes', (req, res) => {
-  const classReference = firebaseClass;
+  cors(req, res, () => {
+    const classReference = firebaseClass;
+  
+    classReference.on("value",
+      snapshot => {
+        const classes = firebaseLooper(snapshot)
+        res.json(classes);
+        classReference.off("value");
+      },
+      errorObject => {
+        console.log("The read failed: " + errorObject.code);
+        res.send("The read failed: " + errorObject.code);
+      });
+  })
 
-  classReference.on("value",
+  /* classReference.on("value",
     snapshot => {
       console.log(snapshot.val());
       res.json(snapshot.val());
@@ -22,9 +37,20 @@ app.get('/api/classes', (req, res) => {
     errorObject => {
       console.log("The read failed: " + errorObject.code);
       res.send("The read failed: " + errorObject.code);
-    });
-  //res.send('API is working')
+    }); */
+  // res.send('API is working')
 });
+
+app.get('/api/classes/:id', (req, res) => {
+  cors(req, res, () => {
+    const classReference = firebaseDB
+  
+    classReference.ref(`classes/${req.params.id}`).once('value')
+      .then(snapshot => {
+        res.json(snapshot)
+      })
+  })
+})
 
 app.post('/api/classes', (req, res) => {
   console.log("HTTP POST Request");
@@ -67,11 +93,50 @@ app.get('/api/seekers', (req, res) => {
     });
 });
 
+/* app.get('/api/seekers', (req, res) => {
+  cors(req, res, () => {
+    const seekerReference = firebaseSeeker
+
+    seekerReference.on("value",
+      snapshot => {
+        console.log(snapshot)
+        const seekers = firebaseLooper(snapshot)
+        res.json(seekers);
+        seekerReference.off("value");
+      },
+      errorObject => {
+        res.send("The read failed: " + errorObject.code)
+      }
+    );
+  })
+}); */
+
+
 app.post('/api/seekers', (req, res) => {
   let name = req.body.name;
-  let sex = req.body.sex;
+  let email = req.body.email;
+  let gender = req.body.gender;
+  let password = req.body.password;
+  let character_name = req.body.character_name;
   let coins = req.body.coins;
-  //let class = req.body.class;  // MUDAR ESSE NOME
+  let clazz_id = req.body.clazz_id;
+  let brain = req.body.brain;
+  let defense = req.body.defense;
+  let hp = req.body.hp;
+  let speed = req.body.speed;
+  let strenght = req.body.strenght;
+  let confirm_password = req.body.confirm_password;
+
+  const referencePath = '/seekers/';
+  const seekerReference = firebaseDB.ref(referencePath);
+  seekerReference.child(name).set({ name, email, gender, password, character_name, coins, clazz_id, brain, defense, hp, speed, strenght },
+    error => {
+      if (error) {
+        res.send("Data could not be saved." + error);
+      } else {
+        res.send("Data saved successfully.");
+      }
+    });
 
 })
 
