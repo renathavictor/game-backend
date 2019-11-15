@@ -93,14 +93,50 @@ app.get('/api/seekers', (req, res) => {
     });
 });
 
+/* app.get('/api/seekers', (req, res) => {
+  cors(req, res, () => {
+    const seekerReference = firebaseSeeker
+
+    seekerReference.on("value",
+      snapshot => {
+        console.log(snapshot)
+        const seekers = firebaseLooper(snapshot)
+        res.json(seekers);
+        seekerReference.off("value");
+      },
+      errorObject => {
+        res.send("The read failed: " + errorObject.code)
+      }
+    );
+  })
+}); */
+
+
 app.post('/api/seekers', (req, res) => {
   let name = req.body.name;
   let email = req.body.email;
+  let gender = req.body.gender;
   let password = req.body.password;
-  let confirm_password = req.body.confirm_password;
-  let character_name = req.boby.character_name
+  let character_name = req.body.character_name;
   let coins = req.body.coins;
-  //let class = req.body.class;  // MUDAR ESSE NOME
+  let clazz_id = req.body.clazz_id;
+  let brain = req.body.brain;
+  let defense = req.body.defense;
+  let hp = req.body.hp;
+  let speed = req.body.speed;
+  let strenght = req.body.strenght;
+  let confirm_password = req.body.confirm_password;
+
+  const referencePath = '/seekers/';
+  const seekerReference = firebaseDB.ref(referencePath);
+  seekerReference.child(name).set({ name, email, gender, password, character_name, coins, clazz_id, brain, defense, hp, speed, strenght },
+    error => {
+      if (error) {
+        res.send("Data could not be saved." + error);
+      } else {
+        res.send("Data saved successfully.");
+      }
+    });
 
 })
 
