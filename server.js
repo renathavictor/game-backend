@@ -95,7 +95,10 @@ app.get('/api/seekers', (req, res) => {
 
 app.post('/api/seekers', (req, res) => {
   let name = req.body.name;
-  let sex = req.body.sex;
+  let email = req.body.email;
+  let password = req.body.password;
+  let confirm_password = req.body.confirm_password;
+  let character_name = req.boby.character_name
   let coins = req.body.coins;
   //let class = req.body.class;  // MUDAR ESSE NOME
 
