@@ -21,10 +21,12 @@ firebase.initializeApp(config);
 const firebaseDB = firebase.database();
 const firebaseClass = firebaseDB.ref('classes'); // fazer um para cada tipo
 const firebaseSeeker = firebaseDB.ref('seekers');
+const firebaseSeekerCard = firebaseDB.ref('seeker-card');
 
 export {
   firebase,
   firebaseDB,
   firebaseClass,
-  firebaseSeeker
+  firebaseSeeker,
+  firebaseSeekerCard
 }
